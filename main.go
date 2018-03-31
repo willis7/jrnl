@@ -16,8 +16,16 @@ func main() {
 		os.Exit(1)
 	}
 	dbPath := filepath.Join(home, "jrnl.db")
-	must(db.Init(dbPath))
-	defer db.Close()
+	bolt, err := db.NewBoltClient("jrnl", dbPath)
+	if err != nil {
+		if err != nil {
+			fmt.Println("failed to create client:", err)
+			os.Exit(1)
+		}
+	}
+	must(bolt.Init())
+	defer bolt.Close()
+	cmd.InitCmd(bolt)
 	must(cmd.RootCmd.Execute())
 
 }
@@ -25,7 +33,7 @@ func main() {
 // must throws an os.Exit(1) if an error is found
 func must(err error) {
 	if err != nil {
-		fmt.Print(err.Error())
+		fmt.Print(err)
 		os.Exit(1)
 	}
 }

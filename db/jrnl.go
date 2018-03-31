@@ -7,37 +7,61 @@ import (
 	"github.com/boltdb/bolt"
 )
 
-var jrnlBucket = []byte("jrnl")
-var db *bolt.DB
+// var jrnlBucket = []byte("jrnl")
+// var db *bolt.DB
 
 type Entry struct {
 	Key   int
 	Value string
 }
 
-// Init creates or opens a db defined by dbPath
-func Init(dbPath string) error {
-	var err error
-	db, err = bolt.Open(dbPath, 0600, &bolt.Options{Timeout: 1 * time.Second})
+// IBoltClient is an interface which represents behaviour of a BoltClient
+type IBoltClient interface {
+	Init() error
+	Close()
+	CreateEntry(string) (int, error)
+	DeleteEntry(int) error
+	AllEntries() ([]Entry, error)
+}
+
+// BoltClient implements the IBoltClient interface
+type BoltClient struct {
+	name   []byte
+	db     *bolt.DB
+	dbPath string
+}
+
+func NewBoltClient(name string, dbPath string) (*BoltClient, error) {
+	db, err := bolt.Open(dbPath, 0600, &bolt.Options{Timeout: 1 * time.Second})
 	if err != nil {
-		return err
+		return &BoltClient{}, err
 	}
-	return db.Update(func(tx *bolt.Tx) error {
-		_, err := tx.CreateBucketIfNotExists(jrnlBucket)
+
+	return &BoltClient{
+		name:   []byte(name),
+		dbPath: dbPath,
+		db:     db,
+	}, nil
+}
+
+// Init creates or opens a db defined by dbPath
+func (c BoltClient) Init() error {
+	return c.db.Update(func(tx *bolt.Tx) error {
+		_, err := tx.CreateBucketIfNotExists(c.name)
 		return err
 	})
 }
 
 // Close the database once finished
-func Close() {
-	db.Close()
+func (c BoltClient) Close() {
+	c.db.Close()
 }
 
 // CreateEntry adds a new entry to the jrnl database
-func CreateEntry(text string) (int, error) {
+func (c BoltClient) CreateEntry(text string) (int, error) {
 	var id int
-	err := db.Update(func(tx *bolt.Tx) error {
-		b := tx.Bucket(jrnlBucket)
+	err := c.db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket(c.name)
 		id64, _ := b.NextSequence()
 		id = int(id64)
 		key := itob(id)
@@ -50,18 +74,18 @@ func CreateEntry(text string) (int, error) {
 }
 
 // DeleteEntry removes an entry from the jrnl database
-func DeleteEntry(key int) error {
-	return db.Update(func(tx *bolt.Tx) error {
-		b := tx.Bucket(jrnlBucket)
+func (c BoltClient) DeleteEntry(key int) error {
+	return c.db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket(c.name)
 		return b.Delete(itob(key))
 	})
 }
 
 // AllEntries returns all entries from the database
-func AllEntries() ([]Entry, error) {
+func (c BoltClient) AllEntries() ([]Entry, error) {
 	var entries []Entry
-	err := db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket(jrnlBucket)
+	err := c.db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket(c.name)
 		c := b.Cursor()
 		for k, v := c.First(); k != nil; k, v = c.Next() {
 			entries = append(entries, Entry{
