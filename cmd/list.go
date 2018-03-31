@@ -8,27 +8,26 @@ import (
 	"github.com/willis7/jrnl/db"
 )
 
-// listCmd represents the list command
-var listCmd = &cobra.Command{
-	Use:   "list",
-	Short: "Lists all of your entries.",
-	Run: func(cmd *cobra.Command, args []string) {
-		entries, err := db.AllEntries()
-		if err != nil {
-			fmt.Println("failed to retrieve entries:", err)
-			os.Exit(1)
-		}
-		if len(entries) == 0 {
-			fmt.Println("you have no entries")
-			return
-		}
-		fmt.Println("Here's your jrnl entries:")
-		for i, entry := range entries {
-			fmt.Printf("%d. %s\n", i+1, entry.Value)
-		}
-	},
-}
+func CreateListCmd(client db.IBoltClient) {
+	var listCmd = &cobra.Command{
+		Use:   "list",
+		Short: "Lists all of your entries.",
+		Run: func(cmd *cobra.Command, args []string) {
+			entries, err := client.AllEntries()
+			if err != nil {
+				fmt.Println("failed to retrieve entries:", err)
+				os.Exit(1)
+			}
+			if len(entries) == 0 {
+				fmt.Println("you have no entries")
+				return
+			}
+			fmt.Println("Here's your jrnl entries:")
+			for i, entry := range entries {
+				fmt.Printf("%d. %s\n", i+1, entry.Value)
+			}
+		},
+	}
 
-func init() {
 	RootCmd.AddCommand(listCmd)
 }
