@@ -23,7 +23,6 @@ func main() {
 			os.Exit(1)
 		}
 	}
-	must(bolt.Init())
 	defer bolt.Close()
 	cmd.InitCmd(bolt)
 	must(cmd.RootCmd.Execute())
