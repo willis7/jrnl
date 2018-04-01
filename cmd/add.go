@@ -16,15 +16,16 @@ func CreateAddCmd(client db.IBoltClient) {
 		Short: "Adds an entry in your journal,",
 		Args:  cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
+			date := args[0]
 			reader := bufio.NewReader(os.Stdin)
 			fmt.Print("Enter text: ")
 			text, _ := reader.ReadString('\n')
-			id, err := client.CreateEntry(text)
+			id, err := client.CreateEntry(date, text)
 			if err != nil {
 				fmt.Println("failed to create entry:", err)
 				os.Exit(1)
 			}
-			fmt.Printf("created; %d. %s", id, text)
+			fmt.Printf("created; %d. %s %s", id, date, text)
 		},
 	}
 

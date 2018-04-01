@@ -24,7 +24,7 @@ func CreateListCmd(client db.IBoltClient) {
 			}
 			fmt.Println("Here's your jrnl entries:")
 			for i, entry := range entries {
-				fmt.Printf("%d. %s\n", i+1, entry.Value)
+				fmt.Printf("%d. %s %s\n", i+1, entry.Date, entry.Text)
 			}
 		},
 	}

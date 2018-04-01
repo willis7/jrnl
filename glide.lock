@@ -1,8 +1,16 @@
-hash: f45e7be6d42d3fb94bdee83d02b310d8fd6fe6e6d5d81641d4241ce025616612
-updated: 2018-03-29T11:07:51.913985+01:00
+hash: e6a4ddcf36fe5c1f161ecea765ca2b26e01464a75d0b86deceb96101815f1e5f
+updated: 2018-03-31T17:39:33.426575+01:00
 imports:
-- name: github.com/boltdb/bolt
-  version: 2f1ce7a837dcb8da3ec595b1dac9d0632f0f99e8
+- name: github.com/asdine/storm
+  version: a86fa5e09c9c50a06416b08fd9acd4839fb2d62e
+  subpackages:
+  - codec
+  - codec/json
+  - index
+  - internal
+  - q
+- name: github.com/coreos/bbolt
+  version: 48ea1b39c25fc1bab3506fbc712ecbaa842c4d2d
 - name: github.com/inconshreveable/mousetrap
   version: 76626ae9c91c4f2a10f34cad8ce83ea42c93bb75
 - name: github.com/mitchellh/go-homedir
