@@ -1,6 +1,6 @@
 # Jrnl
 
-Jrnl is a Go based journal for the command line. It's inspired by the fantastic python tool of the same name; [jrnl](http://jrnl.sh/). It stores the entries in a database using BoltDB in the user home directory, and has no external dependencies. 
+Jrnl is a Go based journal for the command line. It's inspired by the fantastic python tool of the same name; [jrnl](http://jrnl.sh/). It stores the entries in a database using BoltDB in the user home directory, and has no external dependencies.
 
 Simply put the binary on your path and away you go!
 
@@ -21,6 +21,29 @@ Available Commands:
 Use "jrnl [command] --help" for more information about a command.
 ```
 
+## Examples
+
+`list` returns the full list of entries
+```
+$ jrnl list
+Here's your jrnl entries:
+1. 2018-04-01 Easter
+```
+
+`add today` is a shorthand way of adding an entry for today. `yesterday` works too.
+```
+$ jrnl add today
+Enter text: Easter Day
+created; 1. 2018-04-01 Easter Day
+```
+
+`add <date>` takes a date layout as yyyy-mm-dd.
+```
+$ jrnl add 2018-04-01
+Enter text: Easter Day
+created; 1. 2018-04-01 Easter Day
+```
+
 ## Credit
 
 * Jrnl is inspired by the fantastic python tool of the same name [jrnl](http://jrnl.sh/).
@@ -28,6 +51,6 @@ Use "jrnl [command] --help" for more information about a command.
 
 ## TODO
 
-* [ ] implement date tags to `add` command
-* [ ] improve domain model to include time
+* [x] implement date keywords to `add` command (such as `today`, `yesterday`).
+* [x] improve domain model to include time
 * [ ] test coverage
