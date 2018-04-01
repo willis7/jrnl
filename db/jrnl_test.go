@@ -9,7 +9,7 @@ func (c *TBoltClient) Close()                          {}
 func (c *TBoltClient) CreateEntry(string) (int, error) { return 1, nil }
 func (c *TBoltClient) DeleteEntry(int) error           { return nil }
 func (c *TBoltClient) AllEntries() ([]Entry, error) {
-	out := []Entry{Entry{Key: 1, Text: "hello"}}
+	out := []Entry{Entry{ID: 1, Text: "hello"}}
 	return out, nil
 }
 

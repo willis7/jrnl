@@ -1,15 +1,13 @@
 package db
 
 import (
-	"fmt"
-
 	"github.com/asdine/storm"
 )
 
 // Entry represents a Journal entry
 type Entry struct {
-	Key  int `storm:"id,increment"`
-	Date string
+	ID   int    `storm:"increment"`
+	Date string `storm:"index"`
 	Text string
 }
 
@@ -17,8 +15,9 @@ type Entry struct {
 type IBoltClient interface {
 	Close()
 	CreateEntry(string, string) (int, error)
-	DeleteEntry(int) error
+	DeleteEntry(string) error
 	AllEntries() ([]Entry, error)
+	FindEntry(string) (Entry, error)
 }
 
 // BoltClient implements the IBoltClient interface
@@ -59,17 +58,28 @@ func (c BoltClient) CreateEntry(date string, text string) (int, error) {
 	if err != nil {
 		return -1, err
 	}
-	return e.Key, nil
+	return e.ID, nil
 }
 
 // DeleteEntry removes an entry from the jrnl database
-func (c BoltClient) DeleteEntry(key int) error {
-	var e Entry
-	err := c.db.Find("Key", key, &e)
+// sourced by date
+func (c BoltClient) DeleteEntry(date string) error {
+	e, err := c.FindEntry(date)
 	if err != nil {
-		fmt.Printf("failed to retrieve %d.", key)
+		return err
 	}
 	return c.db.DeleteStruct(&e)
+}
+
+// FindEntry retrieves an Entry from the jrnl sourced
+// by date
+func (c BoltClient) FindEntry(date string) (Entry, error) {
+	var e Entry
+	err := c.db.One("Date", date, &e)
+	if err != nil {
+		return e, storm.ErrNotFound
+	}
+	return e, nil
 }
 
 // AllEntries returns all entries from the database
