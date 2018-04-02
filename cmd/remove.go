@@ -9,7 +9,7 @@ import (
 )
 
 // CreateRemoveCmd closes over a client and adds a remove command
-func CreateRemoveCmd(client db.IBoltClient) {
+func CreateRemoveCmd(client db.IClient) {
 	// removeCmd represents the remove command
 	var removeCmd = &cobra.Command{
 		Use:        "remove",

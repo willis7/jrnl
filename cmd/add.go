@@ -13,7 +13,7 @@ import (
 )
 
 // CreateAddCmd closes over a client and adds a add command
-func CreateAddCmd(client db.IBoltClient) {
+func CreateAddCmd(client db.IClient) {
 	var addCmd = &cobra.Command{
 		Use:   "add",
 		Short: "Adds an entry in your journal,",

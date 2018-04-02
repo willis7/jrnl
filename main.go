@@ -16,7 +16,7 @@ func main() {
 		os.Exit(1)
 	}
 	dbPath := filepath.Join(home, "jrnl.db")
-	bolt, err := db.NewBoltClient("jrnl", dbPath)
+	bolt, err := db.NewClient("jrnl", dbPath)
 	if err != nil {
 		if err != nil {
 			fmt.Println("failed to create client:", err)

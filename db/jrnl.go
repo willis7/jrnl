@@ -11,8 +11,8 @@ type Entry struct {
 	Text string
 }
 
-// IBoltClient is an interface which represents behaviour of a BoltClient
-type IBoltClient interface {
+// IClient is an interface which represents behaviour of a Client
+type IClient interface {
 	Close()
 	CreateEntry(string, string) (int, error)
 	DeleteEntry(string) error
@@ -20,21 +20,21 @@ type IBoltClient interface {
 	FindEntry(string) (Entry, error)
 }
 
-// BoltClient implements the IBoltClient interface
-type BoltClient struct {
+// Client implements the IClient interface
+type Client struct {
 	name   []byte
 	db     *storm.DB
 	dbPath string
 }
 
-// NewBoltClient initialises a database and constructs a BoltClient
-func NewBoltClient(name string, dbPath string) (*BoltClient, error) {
+// NewClient initialises a database and constructs a Client
+func NewClient(name string, dbPath string) (*Client, error) {
 	db, err := storm.Open(dbPath)
 	if err != nil {
-		return &BoltClient{}, err
+		return &Client{}, err
 	}
 
-	bc := &BoltClient{
+	bc := &Client{
 		name:   []byte(name),
 		dbPath: dbPath,
 		db:     db,
@@ -44,12 +44,12 @@ func NewBoltClient(name string, dbPath string) (*BoltClient, error) {
 }
 
 // Close the database once finished
-func (c BoltClient) Close() {
+func (c Client) Close() {
 	c.db.Close()
 }
 
 // CreateEntry adds a new entry to the jrnl database
-func (c BoltClient) CreateEntry(date string, text string) (int, error) {
+func (c Client) CreateEntry(date string, text string) (int, error) {
 	e := Entry{
 		Date: date,
 		Text: text,
@@ -63,7 +63,7 @@ func (c BoltClient) CreateEntry(date string, text string) (int, error) {
 
 // DeleteEntry removes an entry from the jrnl database
 // sourced by date
-func (c BoltClient) DeleteEntry(date string) error {
+func (c Client) DeleteEntry(date string) error {
 	e, err := c.FindEntry(date)
 	if err != nil {
 		return err
@@ -73,7 +73,7 @@ func (c BoltClient) DeleteEntry(date string) error {
 
 // FindEntry retrieves an Entry from the jrnl sourced
 // by date
-func (c BoltClient) FindEntry(date string) (Entry, error) {
+func (c Client) FindEntry(date string) (Entry, error) {
 	var e Entry
 	err := c.db.One("Date", date, &e)
 	if err != nil {
@@ -83,7 +83,7 @@ func (c BoltClient) FindEntry(date string) (Entry, error) {
 }
 
 // AllEntries returns all entries from the database
-func (c BoltClient) AllEntries() ([]Entry, error) {
+func (c Client) AllEntries() ([]Entry, error) {
 	var entries []Entry
 	err := c.db.All(&entries)
 	if err != nil {

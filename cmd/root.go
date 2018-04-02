@@ -11,7 +11,7 @@ var RootCmd = &cobra.Command{
 }
 
 // InitCmd adds the subcommands to the Root command
-func InitCmd(client db.IBoltClient) {
+func InitCmd(client db.IClient) {
 	CreateAddCmd(client)
 	CreateRemoveCmd(client)
 	CreateListCmd(client)

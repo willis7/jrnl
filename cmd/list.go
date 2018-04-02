@@ -8,7 +8,7 @@ import (
 	"github.com/willis7/jrnl/db"
 )
 
-func CreateListCmd(client db.IBoltClient) {
+func CreateListCmd(client db.IClient) {
 	var listCmd = &cobra.Command{
 		Use:   "list",
 		Short: "Lists all of your entries.",
