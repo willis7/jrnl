@@ -1,6 +1,8 @@
 package db
 
 import (
+	"fmt"
+
 	"github.com/asdine/storm"
 )
 
@@ -31,7 +33,7 @@ type Client struct {
 func NewClient(name string, dbPath string) (*Client, error) {
 	db, err := storm.Open(dbPath)
 	if err != nil {
-		return &Client{}, err
+		return &Client{}, fmt.Errorf("failed to open db:  %s", err)
 	}
 
 	bc := &Client{
@@ -56,7 +58,7 @@ func (c Client) CreateEntry(date string, text string) (int, error) {
 	}
 	err := c.db.Save(&e)
 	if err != nil {
-		return -1, err
+		return -1, fmt.Errorf("failed to save entry %s,  %s", date, err)
 	}
 	return e.ID, nil
 }
@@ -66,7 +68,7 @@ func (c Client) CreateEntry(date string, text string) (int, error) {
 func (c Client) DeleteEntry(date string) error {
 	e, err := c.FindEntry(date)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to find entry:  %s", err)
 	}
 	return c.db.DeleteStruct(&e)
 }
@@ -87,7 +89,7 @@ func (c Client) AllEntries() ([]Entry, error) {
 	var entries []Entry
 	err := c.db.All(&entries)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to find entries:  %s", err)
 	}
 	return entries, nil
 }

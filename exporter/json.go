@@ -10,11 +10,11 @@ import (
 
 // WriteJSON creates a json file in the same directory of the
 // app
-func WriteJSON(entries []db.Entry) {
+func WriteJSON(entries []db.Entry) error {
 	entriesJSON, err := json.Marshal(entries)
 	if err != nil {
-		fmt.Println("failed to marshall data:", err)
-		return
+		return fmt.Errorf("failed to marshall data: %s", err)
 	}
-	err = ioutil.WriteFile("jrnl.json", entriesJSON, 0644)
+	return ioutil.WriteFile("jrnl.json", entriesJSON, 0644)
+
 }

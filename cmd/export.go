@@ -19,7 +19,11 @@ func CreateExportCmd(client db.IClient) {
 				fmt.Println("failed to retrieve entries: ", err)
 				return
 			}
-			exporter.WriteJSON(e)
+			err = exporter.WriteJSON(e)
+			if err != nil {
+				fmt.Println("failed to export JSON: ", err)
+				return
+			}
 		},
 	}
 	RootCmd.AddCommand(exportCmd)
