@@ -6,17 +6,22 @@ Simply put the binary on your path and away you go!
 
 ## Usage
 
-``` bash
+```
 $ jrnl
-jrnl is a CLI journal manager.
+jrnl is a CLI journal manager
 
 Usage:
   jrnl [command]
 
 Available Commands:
-  add         Add a new entry to your journal
-  remove      Remove an entry from your journal
-  list        List all entries in your journal
+  add         Adds an entry in your journal,
+  export      Export a formatted journal
+  help        Help about any command
+  list        Lists all of your entries.
+  remove      Removes a journal entry.
+
+Flags:
+  -h, --help   help for jrnl
 
 Use "jrnl [command] --help" for more information about a command.
 ```
