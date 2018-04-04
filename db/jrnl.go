@@ -60,6 +60,7 @@ func (c Client) CreateEntry(date string, text string) (int, error) {
 	if err != nil {
 		return -1, fmt.Errorf("failed to save entry %s,  %s", date, err)
 	}
+	fmt.Printf("created: %d. %s %s", e.ID, e.Date, e.Text)
 	return e.ID, nil
 }
 
@@ -70,6 +71,7 @@ func (c Client) DeleteEntry(date string) error {
 	if err != nil {
 		return fmt.Errorf("failed to find entry:  %s", err)
 	}
+	fmt.Printf("deleted: %d. %s %s", e.ID, e.Date, e.Text)
 	return c.db.DeleteStruct(&e)
 }
 

@@ -1,6 +1,9 @@
 package time
 
-import "time"
+import (
+	"strings"
+	"time"
+)
 
 const shortForm = "2006-01-02"
 
@@ -18,4 +21,20 @@ func Yesterday() string {
 // short form string e.g. 2018-01-30
 func ShortFormString(time *time.Time) string {
 	return time.Format(shortForm)
+}
+
+// KeywordToDate determines if an input word is
+// a keyword and returns the short form string
+func KeywordToDate(word string) string {
+	var date string
+	lWord := strings.ToLower(word)
+	if lWord == "today" {
+		date = Today()
+	} else if lWord == "yesterday" {
+		date = Yesterday()
+	} else {
+		// TODO: validate lWorld. Is it a real date?
+		date = lWord
+	}
+	return date
 }

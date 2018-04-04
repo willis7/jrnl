@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strings"
 
 	t "github.com/willis7/jrnl/time"
 
@@ -15,20 +14,14 @@ var addCmd = &cobra.Command{
 	Use:   "add",
 	Short: "Adds an entry in your journal,",
 	Args:  cobra.MinimumNArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
-		date := keywordToDate(args[0])
-
-		// Take a journal entry from the user input
-		// and store it in the db
-		reader := bufio.NewReader(os.Stdin)
-		fmt.Print("Enter text: ")
-		text, _ := reader.ReadString('\n')
-		id, err := client.CreateEntry(date, text)
+	RunE: func(cmd *cobra.Command, args []string) error {
+		date := t.KeywordToDate(args[0])
+		text, err := getUserInput()
+		_, err = client.CreateEntry(date, text)
 		if err != nil {
-			fmt.Println("failed to create entry:", err)
-			os.Exit(1)
+			return fmt.Errorf("failed to create entry: %s", err)
 		}
-		fmt.Printf("created; %d. %s %s", id, date, text)
+		return nil
 	},
 }
 
@@ -36,15 +29,14 @@ func init() {
 	RootCmd.AddCommand(addCmd)
 }
 
-func keywordToDate(word string) string {
-	var date string
-	lWord := strings.ToLower(word)
-	if lWord == "today" {
-		date = t.Today()
-	} else if lWord == "yesterday" {
-		date = t.Yesterday()
-	} else {
-		date = lWord
+func getUserInput() (string, error) {
+	// Take a journal entry from the user input
+	// and store it in the db
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Print("Enter text: ")
+	text, err := reader.ReadString('\n')
+	if err != nil {
+		return "", fmt.Errorf("failed to get user input: %s", err)
 	}
-	return date
+	return text, nil
 }
