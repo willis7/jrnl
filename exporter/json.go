@@ -16,5 +16,4 @@ func WriteJSON(entries []db.Entry) error {
 		return fmt.Errorf("failed to marshall data: %s", err)
 	}
 	return ioutil.WriteFile("jrnl.json", entriesJSON, 0644)
-
 }
