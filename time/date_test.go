@@ -12,7 +12,9 @@ func Test_keywordToDate(t *testing.T) {
 		want string
 	}{
 		{"today", "today", time.Now().Format(shortForm)},
+		{"today mixed case", "Today", time.Now().Format(shortForm)},
 		{"yesterday", "yesterday", time.Now().AddDate(0, 0, -1).Format(shortForm)},
+		{"yesterday mixed case", "Yesterday", time.Now().AddDate(0, 0, -1).Format(shortForm)},
 		{"easter", "2018-04-01", "2018-04-01"},
 	}
 	for _, tt := range tests {

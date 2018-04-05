@@ -27,14 +27,13 @@ func ShortFormString(time *time.Time) string {
 // a keyword and returns the short form string
 func KeywordToDate(word string) string {
 	var date string
-	lWord := strings.ToLower(word)
-	if lWord == "today" {
+	if strings.EqualFold(word, "today") {
 		date = Today()
-	} else if lWord == "yesterday" {
+	} else if strings.EqualFold(word, "yesterday") {
 		date = Yesterday()
 	} else {
 		// TODO: validate lWorld. Is it a real date?
-		date = lWord
+		date = word
 	}
 	return date
 }
