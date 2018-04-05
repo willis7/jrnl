@@ -1,9 +1,12 @@
 language: go
 
-go:
-  - 1.8.x
-  - 1.9.x
-  - tip
+matrix:
+  include:
+    - go: 1.9.4
+    - go: 1.10.0
+    - go: tip
+  allow_failures:
+    - go: tip
 
 before_install:
   - curl https://glide.sh/get | sh
