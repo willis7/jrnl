@@ -4,6 +4,12 @@ Jrnl is a Go based journal for the command line. It's inspired by the fantastic 
 
 Simply put the binary on your path and away you go!
 
+## Installing
+
+Using Jrnl is easy. First, use go get to install the latest version of the application. This command will install the executable along with the library and its dependencies:
+
+`$ go get -u github.com/willis7/jrnl`
+
 ## Usage
 
 ```
